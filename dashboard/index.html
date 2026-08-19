@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Matech Project Dashboard — Materials intelligence analytics and project tracking">
+    <meta name="theme-color" content="#1a1a1a">
+    <title>Dashboard | Matech Materials Intelligence</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+    <script src="../dashboard.js" defer></script>
+</head>
+<body class="dashboard-body">
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">
+                <a href="../index.html" class="logo-link"><span class="logo-text">Matech</span></a>
+            </div>
+            <div class="nav-links">
+                <a href="../index.html">Home</a>
+                <a href="index.html" class="nav-active">Dashboard</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="dashboard-main">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <div>
+                    <h1>Project Dashboard</h1>
+                    <p class="dashboard-subtitle">Materials intelligence analytics &amp; development tracking</p>
+                </div>
+                <div class="dashboard-controls">
+                    <label for="date-range" class="sr-only">Date range</label>
+                    <select id="date-range" class="dashboard-select" aria-label="Select date range">
+                        <option value="7">Last 7 days</option>
+                        <option value="30" selected>Last 30 days</option>
+                        <option value="90">Last 90 days</option>
+                        <option value="all">All time</option>
+                    </select>
+                    <span class="dashboard-updated">Updated <time id="last-updated"></time></span>
+                </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <section class="kpi-grid" aria-label="Key metrics">
+                <article class="kpi-card">
+                    <div class="kpi-label">Active Materials</div>
+                    <div class="kpi-value" id="kpi-materials">—</div>
+                    <div class="kpi-change positive" id="kpi-materials-change">—</div>
+                </article>
+                <article class="kpi-card">
+                    <div class="kpi-label">Avg Confidence Score</div>
+                    <div class="kpi-value" id="kpi-confidence">—</div>
+                    <div class="kpi-change positive" id="kpi-confidence-change">—</div>
+                </article>
+                <article class="kpi-card">
+                    <div class="kpi-label">Characterization Runs</div>
+                    <div class="kpi-value" id="kpi-runs">—</div>
+                    <div class="kpi-change positive" id="kpi-runs-change">—</div>
+                </article>
+                <article class="kpi-card">
+                    <div class="kpi-label">Active Formulations</div>
+                    <div class="kpi-value" id="kpi-formulations">—</div>
+                    <div class="kpi-change neutral" id="kpi-formulations-change">—</div>
+                </article>
+            </section>
+
+            <!-- Charts Row 1 -->
+            <section class="chart-grid">
+                <article class="chart-card chart-card-wide">
+                    <div class="chart-card-header">
+                        <h2>Confidence Score Trend</h2>
+                        <span class="chart-badge">Confidence Engine</span>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="confidence-chart" aria-label="Confidence score trend over time"></canvas>
+                    </div>
+                </article>
+                <article class="chart-card">
+                    <div class="chart-card-header">
+                        <h2>Characterization Methods</h2>
+                        <span class="chart-badge">Lab Data</span>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="characterization-chart" aria-label="Characterization runs by method"></canvas>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Charts Row 2 -->
+            <section class="chart-grid">
+                <article class="chart-card">
+                    <div class="chart-card-header">
+                        <h2>Material Categories</h2>
+                        <span class="chart-badge">Material Identity</span>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="categories-chart" aria-label="Materials by category"></canvas>
+                    </div>
+                </article>
+                <article class="chart-card chart-card-wide">
+                    <div class="chart-card-header">
+                        <h2>State Transitions</h2>
+                        <span class="chart-badge">State Engine</span>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="transitions-chart" aria-label="Material state transitions over time"></canvas>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Benchmark & Engine Status -->
+            <section class="status-grid">
+                <article class="status-card">
+                    <h2>Benchmark Governance</h2>
+                    <ul class="benchmark-list" id="benchmark-list"></ul>
+                </article>
+                <article class="status-card">
+                    <h2>Engine Status</h2>
+                    <ul class="engine-list" id="engine-list"></ul>
+                </article>
+            </section>
+
+            <!-- Activity Table -->
+            <section class="table-section">
+                <div class="table-header">
+                    <h2>Recent Activity</h2>
+                    <span class="table-count" id="activity-count"></span>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table" id="activity-table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Event</th>
+                                <th>Material</th>
+                                <th>Engine</th>
+                                <th>Confidence</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activity-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Top Materials -->
+            <section class="table-section">
+                <div class="table-header">
+                    <h2>Top Materials by Confidence</h2>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table" id="materials-table">
+                        <thead>
+                            <tr>
+                                <th>Material ID</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>State</th>
+                                <th>Confidence</th>
+                                <th>Last Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody id="materials-body"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Matech. All rights reserved.</p>
+            <p class="footer-note">Materials Intelligence Dashboard — Demo data</p>
+        </div>
+    </footer>
+</body>
+</html>
